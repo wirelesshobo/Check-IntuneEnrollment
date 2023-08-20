@@ -1,10 +1,62 @@
+<#
+  .SYNOPSIS
+  Confirm that devices on premise are Hybrid Azure AD Joined and enrolled in Intune.
+  .DESCRIPTION
+  This script obtains a list of Active Directory devices, Azure Active Directory devices, and Intune enrolled devices.
+  It then compares the lists to output a CSV showing current status of the device.
+  .EXAMPLE
+  Check-IntuneEnrollment.ps1 -SearchBase "CN=Computers,DC=testdomain,DC=local"
+  
+  
+  .NOTES
+  Version:        1.1
+  Author:         Scott Stancil
+  Creation Date:  August 19, 2023
+  Modified Date:  August 19, 2023
+  Purpose/Change: Add PowerShell Structure and Command Line Options
+  Link:           https://wirelesshobo.com
+#>
+
+
+param(
+    [Parameter(
+        Mandatory = $true,
+        HelpMessage = "Enter search base path in Active Directory."
+    )]
+    [string]$OUSearchBase,
+
+    [Parameter(
+        Mandatory = $true,
+        HelpMessage = "Enter local path to output report."
+    )]
+    [string]$OutputPath
+)
 
 # Define Action to take on Error
 $ErrorActionPreference = "Stop"
 
-Import-Module ActiveDirectory;
+try {
+    Import-Module ActiveDirectory
+}
+catch {
+    Write-Host "Error loading ActiveDirectory module. Look into adding the module through optional feature Rsat.ActiveDirectory.DS-LDS.Tools."
+}
+
+try{
 Import-Module AzureAD;
-Import-Module Microsoft.Graph.Intune;
+}
+catch {
+    Write-Host "Error loading AzureAD module.  Consider install-module AzureAD."
+}
+
+try{
+    Import-Module Microsoft.Graph.Intune 
+} catch {
+    Write-Host "Error loading Microsoft.Graph.Intune module.  Consider install-module Microsoft.Graph.Intune."
+}
+
+
+
 
 
 # Connect to MSGraph
@@ -32,10 +84,7 @@ $AllWorkstations = @();
 
 # Output file with timestamp.
 $timestamp = get-date -Format yyyyMMddhhmmss
-$filename = "C:\notes\ADAzureADIntuneDeviceReport_" + $timestamp + ".csv"
-
-# Set the base OU to search for computer objects.
-$OUSearchBase = "OU=Workstations,OU=_CSU-Computers,DC=columbia,DC=local";
+$filename = $outputpath + "\HybridAzureADIntuneDeviceReport_" + $timestamp + ".csv"
 
 # ADWorkstations is an array of all computer objects under the Workstations OU
 $ADWorkstations = get-adcomputer -SearchBase $OUSearchBase -filter * -Properties LastLogonDate
