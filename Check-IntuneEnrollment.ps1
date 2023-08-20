@@ -5,11 +5,11 @@
   This script obtains a list of Active Directory devices, Azure Active Directory devices, and Intune enrolled devices.
   It then compares the lists to output a CSV showing current status of the device.
   .EXAMPLE
-  Check-IntuneEnrollment.ps1 -SearchBase "CN=Computers,DC=testdomain,DC=local"
+  Check-IntuneEnrollment.ps1 -SearchBase "CN=Computers,DC=testdomain,DC=local" -OutputPath "C:\ReportPath"
   
   
   .NOTES
-  Version:        1.2
+  Version:        1.3
   Author:         Scott Stancil
   Creation Date:  August 19, 2023
   Modified Date:  August 20, 2023
