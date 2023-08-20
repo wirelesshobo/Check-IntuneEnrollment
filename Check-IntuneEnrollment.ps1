@@ -9,11 +9,10 @@
   
   
   .NOTES
-  Version:        1.1
+  Version:        1.2
   Author:         Scott Stancil
   Creation Date:  August 19, 2023
-  Modified Date:  August 19, 2023
-  Purpose/Change: Add PowerShell Structure and Command Line Options
+  Modified Date:  August 20, 2023
   Link:           https://wirelesshobo.com
 #>
 
